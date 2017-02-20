@@ -1,0 +1,3 @@
+"""
+Django Tiers tests
+"""
