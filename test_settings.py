@@ -33,3 +33,5 @@ MIDDLEWARE_CLASSES = (
 )
 
 ORGANIZATION_MODEL = 'organizations.Organization'
+TIER_EXPIRED_REDIRECT_URL = "/"
+
