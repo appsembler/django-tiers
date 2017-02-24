@@ -1,4 +1,5 @@
 from django.conf import settings
 
-TIERS_ORGANIZATION_MODEL = getattr(settings, 'ORGANIZATION_MODEL', 'organizations.Organization')
+ORGANIZATION_MODEL = getattr(settings, 'TIERS_ORGANIZATION_MODEL', 'organizations.Organization')
+EXPIRED_REDIRECT_URL = getattr(settings, 'TIERS_EXPIRED_REDIRECT_URL', None)
 

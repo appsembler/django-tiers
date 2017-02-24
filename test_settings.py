@@ -32,6 +32,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ORGANIZATION_MODEL = 'organizations.Organization'
-TIER_EXPIRED_REDIRECT_URL = "/"
+TIERS_ORGANIZATION_MODEL = 'organizations.Organization'
+TIERS_EXPIRED_REDIRECT_URL = "/"
 

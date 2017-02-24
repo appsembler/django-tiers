@@ -4,7 +4,7 @@ from functools import wraps
 from django.utils import timezone
 from django.db import models
 
-from .app_settings import TIERS_ORGANIZATION_MODEL
+from .app_settings import ORGANIZATION_MODEL
 
 from dateutil.relativedelta import relativedelta
 from model_utils.models import TimeStampedModel
@@ -33,7 +33,7 @@ class Tier(TimeStampedModel):
         max_length=255,
         choices=TIERS,
         default=TIERS.TRIAL)
-    organization = models.OneToOneField(TIERS_ORGANIZATION_MODEL, related_name='tier')
+    organization = models.OneToOneField(ORGANIZATION_MODEL, related_name='tier')
     tier_enforcement_exempt = models.BooleanField(default=False)
     tier_enforcement_grace_period = models.PositiveIntegerField(default=14)
     tier_expires_at = models.DateTimeField(
@@ -61,4 +61,5 @@ class Tier(TimeStampedModel):
             return "{0} days and {1} hours".format(abs(rd.days), abs(rd.hours))
         else:
             return "{0} hours".format(abs(rd.hours))
+
 
