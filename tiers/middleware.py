@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 
 def clear_expiration_from_session(session):
-    KEYS = ['DISPLAY_EXPIRATION_WARNING', 'TIER_EXPIRES_IN']
+    KEYS = ['DISPLAY_EXPIRATION_WARNING', 'TIER_EXPIRES_IN', 'TIER_EXPIRED']
     for key in KEYS:
         try:
             del session[key]
@@ -50,15 +50,17 @@ class TierMiddleware(object):
             log.error("Organization wihout Tier: {0}".format(org))
             return
 
+        if tier.name == Tier.TIERS.TRIAL:
+            request.session['DISPLAY_EXPIRATION_WARNING'] = True
+            request.session['TIER_EXPIRES_IN'] = tier.time_til_tier_expires()
+
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
         if tier.has_tier_expired():
-            if tier.name == Tier.TIERS.TRIAL:
-                request.session['DISPLAY_EXPIRATION_WARNING'] = True
-                request.session['TIER_EXPIRES_IN'] = tier.time_til_tier_expires()
-                if EXPIRED_REDIRECT_URL is None:
-                    return
-                else:
-                    return redirect(EXPIRED_REDIRECT_URL)
+            request.session['TIER_EXPIRED'] = True
+            if EXPIRED_REDIRECT_URL is None:
+                return
+            else:
+                return redirect(EXPIRED_REDIRECT_URL)
         else:
             clear_expiration_from_session(request.session)
             return
