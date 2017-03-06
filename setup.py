@@ -20,7 +20,7 @@ setup(
         'Programming Language :: Python',
         'Framework :: Django',
     ],
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages(exclude=['tests', 'fake_organizations']),
     install_requires=[
         'django>=1.8,<1.9',
         'django-model-utils<=2.3.1',

@@ -4,7 +4,7 @@ import factory
 from factory.django import DjangoModelFactory
 
 from tiers.models import Tier, set_default_expiration
-from organizations.models import Organization
+from fake_organizations.models import Organization
 
 
 class OrganizationFactory(DjangoModelFactory):

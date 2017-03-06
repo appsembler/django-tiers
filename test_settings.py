@@ -20,7 +20,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
 
-    'organizations',
+    'fake_organizations',
     'tiers'
 
 )
@@ -32,6 +32,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-TIERS_ORGANIZATION_MODEL = 'organizations.Organization'
+TIERS_ORGANIZATION_MODEL = 'fake_organizations.Organization'
 TIERS_EXPIRED_REDIRECT_URL = "/"
 
