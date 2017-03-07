@@ -27,6 +27,9 @@ class TierMiddleware(object):
         Fetch organization from session and deny access to the system if the tier
         is expired
         """
+        # If we're aleady on the url where we have to be, do nothing
+        if (EXPIRED_REDIRECT_URL is not None) and (request.path in EXPIRED_REDIRECT_URL):
+            return
         # Nothing to do if the user is not logged in
         if not request.user.is_authenticated():
             return
