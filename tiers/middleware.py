@@ -28,7 +28,7 @@ class TierMiddleware(object):
         is expired
         """
         # If we're aleady on the url where we have to be, do nothing
-        if (EXPIRED_REDIRECT_URL is not None) and (request.path in EXPIRED_REDIRECT_URL):
+        if (EXPIRED_REDIRECT_URL is not None) and (request.path.rstrip('/') in EXPIRED_REDIRECT_URL.rstrip('/')):
             return
         # Nothing to do if the user is not logged in
         if not request.user.is_authenticated():
