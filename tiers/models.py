@@ -27,6 +27,7 @@ def check_if_exempt(f):
 class Tier(TimeStampedModel):
     TIERS = Choices(
         ('trial', 'TRIAL', 'Trial'),  # Expires in 30 days
+        ('basic', 'BASIC', 'Basic'),  # Expires in 30 days
     )
 
     name = models.CharField(
