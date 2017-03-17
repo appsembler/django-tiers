@@ -12,7 +12,7 @@ from model_utils import Choices
 
 
 def set_default_expiration():
-    timezone.now() + timedelta(days=30)
+    return timezone.now() + timedelta(days=30)
 
 
 def check_if_exempt(f):
