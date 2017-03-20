@@ -3,7 +3,7 @@ import logging
 from django.shortcuts import redirect
 
 from .models import Tier
-from .app_settings import EXPIRED_REDIRECT_URL
+from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
 
 
 log = logging.getLogger(__name__)
@@ -45,7 +45,10 @@ class TierMiddleware(object):
 
         org = request.session['organization']
         try:
-            tier = org.tier
+            if ORGANIZATION_TIER_GETTER_NAME:
+                tier = org.__getattribute__(ORGANIZATION_TIER_GETTER_NAME)()
+            else:
+                tier = org.tier
         except:
             # If the organization for some reason does not have a tier assigned
             # fail silently. This should not happen. We should always automatically create
