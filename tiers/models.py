@@ -38,7 +38,7 @@ class Tier(TimeStampedModel):
             related_name='tier',
             null=True,
             blank=True,
-            on_delete=models.SET_NULL)
+            on_delete=models.DO_NOTHING)
     tier_enforcement_exempt = models.BooleanField(default=False)
     tier_enforcement_grace_period = models.PositiveIntegerField(default=14)
     tier_expires_at = models.DateTimeField(
