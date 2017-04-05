@@ -1,4 +1,4 @@
 """
 django-tiers initialization module
 """
-__version__ = '0.0.9'  # pragma: no cover
+__version__ = '0.0.10'  # pragma: no cover

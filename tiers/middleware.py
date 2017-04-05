@@ -53,7 +53,7 @@ class TierMiddleware(object):
             # If the organization for some reason does not have a tier assigned
             # fail silently. This should not happen. We should always automatically create
             # a tier for each organization.
-            log.error("Organization wihout Tier: {0}".format(org))
+            log.warning("Organization wihout Tier: {0}".format(org))
             return
 
         if tier.name == Tier.TIERS.TRIAL:
