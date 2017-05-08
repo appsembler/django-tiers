@@ -9,15 +9,6 @@ from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
 log = logging.getLogger(__name__)
 
 
-def clear_expiration_from_session(session):
-    KEYS = ['DISPLAY_EXPIRATION_WARNING', 'TIER_EXPIRES_IN', 'TIER_EXPIRED']
-    for key in KEYS:
-        try:
-            del session[key]
-        except KeyError:
-            pass
-
-
 class TierMiddleware(object):
     """
     Django Tiers middleware
@@ -38,7 +29,7 @@ class TierMiddleware(object):
         if request.user.is_superuser:
             return
 
-        # If there is not organization in the sesssion fail silenty.
+        # If there is no organization in the sesssion fail silenty.
         # This should not happen.
         if not request.session.get('organization'):
             return
@@ -56,18 +47,15 @@ class TierMiddleware(object):
             log.warning("Organization wihout Tier: {0}".format(org))
             return
 
-        if tier.name == Tier.TIERS.TRIAL:
-            request.session['DISPLAY_EXPIRATION_WARNING'] = True
-            request.session['TIER_EXPIRES_IN'] = tier.time_til_tier_expires()
+        # Only display expiration warning for Trial tiers for now
+        request.session['DISPLAY_EXPIRATION_WARNING'] = tier.name == Tier.TIERS.TRIAL
+        request.session['TIER_EXPIRES_IN'] = tier.time_til_tier_expires()
+        # TODO: I'm not sure if we have to refresh the session info at this point somehow.
+        request.session['TIER_EXPIRED'] = tier.has_tier_expired()
 
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
-        if tier.has_tier_expired():
-            request.session['TIER_EXPIRED'] = True
-            if EXPIRED_REDIRECT_URL is None:
-                return
-            else:
-                return redirect(EXPIRED_REDIRECT_URL)
-        else:
-            clear_expiration_from_session(request.session)
+        if EXPIRED_REDIRECT_URL is None:
             return
+        else:
+            return redirect(EXPIRED_REDIRECT_URL)
 
