@@ -54,8 +54,9 @@ class TierMiddleware(object):
         request.session['TIER_EXPIRED'] = tier.has_tier_expired()
 
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
-        if EXPIRED_REDIRECT_URL is None:
-            return
-        else:
-            return redirect(EXPIRED_REDIRECT_URL)
+        if tier.has_tier_expired():
+            if EXPIRED_REDIRECT_URL is None:
+                return
+            else:
+                return redirect(EXPIRED_REDIRECT_URL)
 
