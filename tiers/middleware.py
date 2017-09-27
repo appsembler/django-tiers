@@ -1,6 +1,7 @@
 import logging
 
 from django.shortcuts import redirect
+from django.urls import reverse
 
 from .models import Tier
 from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
@@ -21,6 +22,11 @@ class TierMiddleware(object):
         # If we're aleady on the url where we have to be, do nothing
         if (EXPIRED_REDIRECT_URL is not None) and (request.path.rstrip('/') in EXPIRED_REDIRECT_URL.rstrip('/')):
             return
+
+        # If we're trying to log out or release a hijacked user, don't redirect to expired page
+        if request.path == reverse("account_logout") or request.path == reverse("release_hijack"):
+            return
+
         # Nothing to do if the user is not logged in
         if not request.user.is_authenticated():
             return
