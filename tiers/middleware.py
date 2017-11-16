@@ -1,7 +1,7 @@
 import logging
 
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 
 from .models import Tier
 from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
