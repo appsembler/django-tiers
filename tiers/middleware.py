@@ -1,6 +1,7 @@
 import logging
 
 from django.shortcuts import redirect
+from django.core.exceptions import NoReverseMatch
 from django.core.urlresolvers import reverse
 
 from .models import Tier
@@ -23,9 +24,13 @@ class TierMiddleware(object):
         if (EXPIRED_REDIRECT_URL is not None) and (request.path.rstrip('/') in EXPIRED_REDIRECT_URL.rstrip('/')):
             return
 
-        # If we're trying to log out or release a hijacked user, don't redirect to expired page
-        if request.path == reverse("account_logout") or request.path == reverse("release_hijack"):
-            return
+        # try/catch needed because the URLs don't necessarily exist both in AMC and edX
+        try:
+            # If we're trying to log out or release a hijacked user, don't redirect to expired page
+            if request.path == reverse("release_hijack") or request.path == reverse("account_logout"):
+                return
+        except NoReverseMatch:
+            pass
 
         # Nothing to do if the user is not logged in
         if not request.user.is_authenticated():
