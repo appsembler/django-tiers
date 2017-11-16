@@ -1,8 +1,7 @@
 import logging
 
 from django.shortcuts import redirect
-from django.core.exceptions import NoReverseMatch
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import NoReverseMatch, reverse
 
 from .models import Tier
 from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
