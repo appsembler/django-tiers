@@ -64,7 +64,11 @@ class Tier(TimeStampedModel):
     def time_til_tier_expires(self):
         """Pretty prints time left til expiration"""
         rd = relativedelta(self.tier_expires_at, timezone.now())
-        if abs(rd.days) != 0:
+        if abs(rd.years) != 0:
+            return "{0} year, {1} months, {2} days and {3} hours".format(abs(rd.years), abs(rd.months), abs(rd.days), abs(rd.hours))
+        elif abs(rd.months) != 0:
+            return "{0} months, {1} days and {2} hours".format(abs(rd.months), abs(rd.days), abs(rd.hours))
+        elif abs(rd.days) != 0:
             return "{0} days and {1} hours".format(abs(rd.days), abs(rd.hours))
         else:
             return "{0} hours".format(abs(rd.hours))
