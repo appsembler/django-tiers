@@ -7,6 +7,5 @@ install:
   - pip install -r requirements.txt
   - pip install pytest-cov
 script:
-  - mkdir test-reports
-  - py.test --junitxml=test-reports/results.xml --cov=./
+  - py.test --junitxml=results.xml --cov=./
   - bash <(curl -s https://codecov.io/bash)
