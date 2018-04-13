@@ -1,5 +1,8 @@
 # Django Tiers
 
+[![Build Status](https://travis-ci.org/appsembler/djanogo-tiers.svg?branch=master)](https://travis-ci.org/appsembler/django-tiers)
+[![codecov](https://codecov.io/gh/appsembler/django-tiers/branch/master/graph/badge.svg)](https://codecov.io/gh/appsembler/django-tiers)
+
 This should serve as a reusable django app for representing tiers. Currently it only implements the
 "Trial" tier but it should be easily extendable.
 
