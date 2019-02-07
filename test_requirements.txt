@@ -2,4 +2,5 @@ tox==2.6.0
 factory-boy>=2.6.0,<3.0.0
 pytest==3.0.6
 pytest-django==3.1.2
-
+freezegun==0.3.11
+pytz==2018.9
