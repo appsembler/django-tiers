@@ -1,9 +1,7 @@
-from datetime import datetime, timedelta
-
 import factory
 from factory.django import DjangoModelFactory
 
-from tiers.models import Tier, set_default_expiration
+from tiers.models import Tier
 from fake_organizations.models import Organization
 
 
@@ -18,10 +16,5 @@ class TierFactory(DjangoModelFactory):
     class Meta(object):
         model = Tier
 
-    name = Tier.TIERS.TRIAL
     organization = factory.SubFactory(OrganizationFactory)
-
-    tier_enforcement_exempt = False
-    tier_enforcement_grace_period = 14
-    tier_expires_at = datetime.now() + timedelta(days=30)
 
