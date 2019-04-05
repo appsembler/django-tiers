@@ -17,4 +17,3 @@ class TierFactory(DjangoModelFactory):
         model = Tier
 
     organization = factory.SubFactory(OrganizationFactory)
-

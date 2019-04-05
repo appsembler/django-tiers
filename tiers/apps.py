@@ -6,5 +6,4 @@ class TiersConfig(AppConfig):
     label = 'tiers'
 
     def ready(self):
-        from tiers import models
-
+        pass

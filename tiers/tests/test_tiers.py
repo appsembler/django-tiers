@@ -15,29 +15,29 @@ class TiersTests(TiersTestCaseBase):
 
     def test_non_expired_tier(self):
         t = TierFactory()
-        assert t.tier_enforcement_exempt == False
-        assert t.has_tier_expired() == False
-        assert t.has_tier_grace_period_expired() == False
+        assert t.tier_enforcement_exempt is False
+        assert t.has_tier_expired() is False
+        assert t.has_tier_grace_period_expired() is False
 
     def test_expired_tier(self):
         t = TierFactory(tier_expires_at=(datetime.now() - timedelta(days=2)))
-        assert t.tier_enforcement_exempt == False
-        assert t.has_tier_expired() == True
-        assert t.has_tier_grace_period_expired() == False
+        assert t.tier_enforcement_exempt is False
+        assert t.has_tier_expired() is True
+        assert t.has_tier_grace_period_expired() is False
 
     def test_expired_grade_period(self):
         t = TierFactory(tier_expires_at=(datetime.now() - timedelta(days=20)))
-        assert t.tier_enforcement_exempt == False
-        assert t.has_tier_expired() == True
-        assert t.has_tier_grace_period_expired() == True
+        assert t.tier_enforcement_exempt is False
+        assert t.has_tier_expired() is True
+        assert t.has_tier_grace_period_expired() is True
 
     def test_exemption(self):
         t = TierFactory(
             tier_enforcement_exempt=True,
             tier_expires_at=(datetime.now() - timedelta(days=20)))
-        assert t.tier_enforcement_exempt == True
-        assert t.has_tier_expired() == False
-        assert t.has_tier_grace_period_expired() == False
+        assert t.tier_enforcement_exempt is True
+        assert t.has_tier_expired() is False
+        assert t.has_tier_grace_period_expired() is False
 
     def test_expire_message(self):
         """

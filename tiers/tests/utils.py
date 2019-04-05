@@ -9,4 +9,3 @@ class TiersTestCaseBase(TestCase):
     Parent/Base class for Tiers test cases
     """
     pass
-
