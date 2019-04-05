@@ -22,7 +22,7 @@ setup(
     ],
     packages=find_packages(exclude=['tests', 'fake_organizations']),
     install_requires=[
-        'django>=1.8,<1.11',
+        'django<2',
         'django-model-utils<=2.3.1',
         'python-dateutil<=2.6.0',
     ],
