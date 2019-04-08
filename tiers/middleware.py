@@ -50,7 +50,7 @@ class TierMiddleware(object):
                 tier = org.__getattribute__(ORGANIZATION_TIER_GETTER_NAME)()
             else:
                 tier = org.tier
-        except:
+        except Exception:
             # If the organization for some reason does not have a tier assigned
             # fail silently. This should not happen. We should always automatically create
             # a tier for each organization.
@@ -59,7 +59,7 @@ class TierMiddleware(object):
 
         # Only display expiration warning for Trial tiers for now
         request.session['DISPLAY_EXPIRATION_WARNING'] = ((tier.name == Tier.TIERS.TRIAL) and
-                (not tier.tier_enforcement_exempt))
+                                                         (not tier.tier_enforcement_exempt))
         request.session['TIER_EXPIRES_IN'] = tier.time_til_tier_expires()
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
         request.session['TIER_EXPIRED'] = tier.has_tier_expired()
@@ -70,4 +70,3 @@ class TierMiddleware(object):
                 return
             else:
                 return redirect(EXPIRED_REDIRECT_URL)
-

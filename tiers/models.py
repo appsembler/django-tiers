@@ -36,11 +36,12 @@ class Tier(TimeStampedModel):
         max_length=255,
         choices=TIERS,
         default=TIERS.TRIAL)
-    organization = models.OneToOneField(ORGANIZATION_MODEL,
-            related_name='tier',
-            null=True,
-            blank=True,
-            on_delete=models.DO_NOTHING)
+    organization = models.OneToOneField(
+        ORGANIZATION_MODEL,
+        related_name='tier',
+        null=True,
+        blank=True,
+        on_delete=models.DO_NOTHING)
     tier_enforcement_exempt = models.BooleanField(default=False)
     tier_enforcement_grace_period = models.PositiveIntegerField(default=14)
     tier_expires_at = models.DateTimeField(
@@ -57,8 +58,9 @@ class Tier(TimeStampedModel):
     @check_if_exempt
     def has_tier_grace_period_expired(self):
         """Helper function that checks whether a tier's grace period has expired"""
-        return (timezone.now() >
-               (self.tier_expires_at + timedelta(days=self.tier_enforcement_grace_period)))
+        return (
+            timezone.now() >
+            (self.tier_expires_at + timedelta(days=self.tier_enforcement_grace_period)))
 
     @check_if_exempt
     def time_til_tier_expires(self):
