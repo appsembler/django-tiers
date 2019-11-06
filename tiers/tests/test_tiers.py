@@ -3,12 +3,15 @@ from __future__ import unicode_literals
 import re
 
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 from django.utils.timezone import now as timezone_now
-
+from django.test.client import RequestFactory
 from freezegun import freeze_time
+from mock import patch, Mock
 
 from tiers.tests.utils import TiersTestCaseBase
 from tiers.tests.factories import TierFactory
+from tiers.middleware import TierMiddleware
 
 
 class TiersTests(TiersTestCaseBase):
@@ -63,3 +66,29 @@ class TiersTests(TiersTestCaseBase):
         with freeze_time(datetime(2020, 2, 6)):
             message = t.time_til_tier_expires()
             assert re.match('0.*minutes', message), 'Should handle future time well.'
+
+
+@patch.object(User, 'is_authenticated', Mock(return_value=True))
+@patch('tiers.middleware.reverse', Mock(return_value='/something'))
+class TestMiddlewareTests(TiersTestCaseBase):
+    def setUp(self):
+        super(TestMiddlewareTests, self).setUp()
+        self.middleware = TierMiddleware()
+        self.tier = TierFactory.create(tier_expires_at=datetime.now()+timedelta(days=40))
+        self.request = RequestFactory().get('/dashboard')
+        self.request.session = {}
+        self.request.session['organization'] = self.tier.organization
+        self.user = User()
+        self.request.user = self.user
+
+    def test_empty_by_default_attributes(self):
+        default = object()
+        for attrib in ['DISPLAY_EXPIRATION_WARNING', 'TIER_EXPIRES_IN', 'TIER_EXPIRED', 'TIER_NAME']:
+            assert self.request.session.get(attrib, default) is default
+
+    def test_added_session_attribs(self):
+        self.middleware.process_request(self.request)
+        assert not self.request.session['TIER_EXPIRED']
+        assert self.request.session['TIER_EXPIRES_IN'] == self.tier.time_til_tier_expires()
+        assert self.request.session['DISPLAY_EXPIRATION_WARNING']
+        assert self.request.session['TIER_NAME'] == 'trial'

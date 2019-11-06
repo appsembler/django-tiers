@@ -63,6 +63,8 @@ class TierMiddleware(object):
         request.session['TIER_EXPIRES_IN'] = tier.time_til_tier_expires()
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
         request.session['TIER_EXPIRED'] = tier.has_tier_expired()
+        # TODO: We should use request.TIER_NAME instead of meddling the session, but being consistent for now
+        request.session['TIER_NAME'] = tier.name
 
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
         if tier.has_tier_expired():
