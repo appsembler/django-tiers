@@ -8,7 +8,7 @@ install-test-deps:
 	@pip install -r test_requirements.txt
 
 test:
-	@PYTHON_INTERPRETER_35=/usr/bin/python3 tox
+	@PYTHON_INTERPRETER_36=/usr/bin/python3.6 tox
 	@rm -rf test.db
 
 clean:

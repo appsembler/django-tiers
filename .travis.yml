@@ -15,8 +15,6 @@ env:
 install:
   - pip install -r requirements.txt
   - pip install $DJANGO
-  - pip install pytest-cov
-  - pip install flake8
 script:
   - flake8 tiers
   - py.test --junitxml=results.xml --cov=./
