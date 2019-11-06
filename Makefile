@@ -8,8 +8,7 @@ install-test-deps:
 	@pip install -r test_requirements.txt
 
 test:
-	@PYTHON_INTERPRETER_36=/usr/bin/python3.6 tox
-	@rm -rf test.db
+	@tox
 
 clean:
 	@rm -rf .cache
