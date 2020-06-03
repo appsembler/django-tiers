@@ -2,6 +2,7 @@ import logging
 
 from django.shortcuts import redirect
 from django.core.urlresolvers import NoReverseMatch, reverse
+from django.utils.deprecation import MiddlewareMixin
 
 from .models import Tier
 from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
@@ -10,7 +11,7 @@ from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
 log = logging.getLogger(__name__)
 
 
-class TierMiddleware(object):
+class TierMiddleware(MiddlewareMixin):
     """
     Django Tiers middleware
     """
