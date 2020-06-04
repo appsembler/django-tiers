@@ -25,12 +25,12 @@ INSTALLED_APPS = (
 
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-)
+]
 
 TIERS_ORGANIZATION_MODEL = 'fake_organizations.Organization'
 TIERS_EXPIRED_REDIRECT_URL = "/"
