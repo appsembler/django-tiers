@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2020-06-04
+
 ### Changed
 
 - Added supoort for Django 1.10+ style middleware
@@ -15,5 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - starting changelog
 
-[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.0.20...HEAD
+[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/appsembler/django-tiers/compare/v0.0.20...v0.1.0
 [0.0.20]: https://github.com/appsembler/django-tiers/releases/tag/v0.0.20
