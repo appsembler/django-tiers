@@ -39,7 +39,7 @@ class TierMiddleware(MiddlewareMixin):
             pass
 
         # Nothing to do if the user is not logged in
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return
 
         # If the user has superuser privileges don't do anything
