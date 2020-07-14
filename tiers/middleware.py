@@ -1,8 +1,8 @@
 import logging
 
 from django.shortcuts import redirect
-from django.core.urlresolvers import NoReverseMatch, reverse
 from django.utils.deprecation import MiddlewareMixin
+from django.urls import NoReverseMatch, reverse
 
 from .models import Tier
 from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
@@ -39,7 +39,7 @@ class TierMiddleware(MiddlewareMixin):
             pass
 
         # Nothing to do if the user is not logged in
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return
 
         # If the user has superuser privileges don't do anything
