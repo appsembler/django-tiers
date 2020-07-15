@@ -3,6 +3,7 @@ dist: xenial
 sudo: false
 python:
   - "3.6"
+  - "3.8"
   - "2.7"
 env:
   - DJANGO="Django>=1.11,<2"

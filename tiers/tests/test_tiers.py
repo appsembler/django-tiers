@@ -4,8 +4,6 @@ import re
 
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
-from django.utils import timezone
-from django.utils.timezone import now as timezone_now
 from django.test.client import RequestFactory
 from mock import patch, Mock
 
