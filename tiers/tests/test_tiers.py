@@ -4,9 +4,9 @@ import re
 
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.utils.timezone import now as timezone_now
 from django.test.client import RequestFactory
-from freezegun import freeze_time
 from mock import patch, Mock
 
 from tiers.tests.utils import TiersTestCaseBase
@@ -49,23 +49,17 @@ class TiersTests(TiersTestCaseBase):
         This function uses regexps match what the Django `timeuntil` returns.
         The `avoid_wrapping` function has more details in the docstring.
         """
-        with freeze_time(datetime(2019, 2, 5)):
-            t = TierFactory.create()
-            assert datetime.now() == datetime(2019, 2, 5), 'Ensure that freeze works'
-            assert timezone_now() == datetime(2019, 2, 5), 'Ensure that freeze works'
-            assert t.tier_expires_at == datetime(2019, 3, 7)
+        t = TierFactory.create(tier_expires_at=datetime(2019, 2, 5) + timedelta(days=30))
+        assert t.tier_expires_at == datetime(2019, 3, 7)
 
-        with freeze_time(datetime(2019, 2, 6)):
-            message = t.time_til_tier_expires()
-            assert re.match('4.*weeks,.*1.*day', message), 'Should handle long time well'
+        message = t.time_til_tier_expires(now=datetime(2019, 2, 6))
+        assert re.match('4.*weeks,.*1.*day', message), 'Should handle long time well'
 
-        with freeze_time(datetime(2019, 3, 4, 0, 8, 0)):
-            message = t.time_til_tier_expires()
-            assert re.match(r'2.*days,.*23.*hours', message), 'Should short time well'
+        message = t.time_til_tier_expires(now=datetime(2019, 3, 4, 0, 8, 0))
+        assert re.match(r'2.*days,.*23.*hours', message), 'Should short time well'
 
-        with freeze_time(datetime(2020, 2, 6)):
-            message = t.time_til_tier_expires()
-            assert re.match('0.*minutes', message), 'Should handle future time well.'
+        message = t.time_til_tier_expires(now=datetime(2020, 2, 6))
+        assert re.match('0.*minutes', message), 'Should handle future time well.'
 
 
 @patch.object(User, 'is_authenticated', Mock(return_value=True))
