@@ -17,10 +17,10 @@ def set_default_expiration():
 
 def check_if_exempt(f):
     @wraps(f)
-    def wrapper(self):
+    def wrapper(self, **kwargs):
         if self.tier_enforcement_exempt:
             return False
-        return f(self)
+        return f(self, **kwargs)
     return wrapper
 
 
@@ -63,6 +63,6 @@ class Tier(TimeStampedModel):
             (self.tier_expires_at + timedelta(days=self.tier_enforcement_grace_period)))
 
     @check_if_exempt
-    def time_til_tier_expires(self):
+    def time_til_tier_expires(self, now=None):
         """Pretty prints time left til expiration"""
-        return timeuntil(self.tier_expires_at)
+        return timeuntil(self.tier_expires_at, now)
