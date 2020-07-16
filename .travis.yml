@@ -7,11 +7,11 @@ python:
   - "2.7"
 env:
   - DJANGO="Django>=1.11,<2"
-#   - DJANGO="Django>=2.0,<3"
-# matrix:
-#   exclude:
-#   - python: '2.7'
-#     env: DJANGO="Django>=2.0,<3"
+  - DJANGO="Django>=2.0,<3"
+matrix:
+  exclude:
+  - python: '2.7'
+    env: DJANGO="Django>=2.0,<3"
 
 install:
   - pip install -r requirements.txt

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added basic honeycomb instrumentation to middleware
 - Removed a Django 2 deprecation warning
 - Added testing against Python 3.8
+- Added testing against Django 2.x
 
 ## [0.1.0] - 2020-06-04
 
