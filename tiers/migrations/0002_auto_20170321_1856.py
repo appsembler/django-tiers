@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='tier',
             name='organization',
-            field=models.OneToOneField(related_name='tier', null=True, blank=True, to=ORGANIZATION_MODEL),
+            field=models.OneToOneField(related_name='tier', null=True, blank=True, to=ORGANIZATION_MODEL, on_delete=models.deletion.DO_NOTHING),
         ),
     ]

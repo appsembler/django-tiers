@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('tier_enforcement_exempt', models.BooleanField(default=False)),
                 ('tier_enforcement_grace_period', models.PositiveIntegerField(default=14)),
                 ('tier_expires_at', models.DateTimeField(default=tiers.models.set_default_expiration)),
-                ('organization', models.OneToOneField(related_name='tier', to=ORGANIZATION_MODEL)),
+                ('organization', models.OneToOneField(related_name='tier', to=ORGANIZATION_MODEL, on_delete=models.deletion.DO_NOTHING)),
             ],
             options={
                 'abstract': False,
