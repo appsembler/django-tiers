@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a missing migration
+
 ## [0.2.0] - 2020-07-16
 
 - Added basic honeycomb instrumentation to middleware
