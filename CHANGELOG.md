@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [0.2.1] - 2020-09-09
+
 - Added a missing migration
 
 ## [0.2.0] - 2020-07-16
@@ -26,7 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - starting changelog
 
-[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/appsembler/django-tiers/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/appsembler/django-tiers/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/appsembler/django-tiers/compare/v0.0.20...v0.1.0
 [0.0.20]: https://github.com/appsembler/django-tiers/releases/tag/v0.0.20
