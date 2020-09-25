@@ -23,7 +23,7 @@ setup(
     packages=find_packages(exclude=['tests', 'fake_organizations']),
     install_requires=[
         'django<3',
-        'django-model-utils<=2.3.1',
-        'python-dateutil<=2.8.1',
+        'django-model-utils',
+        'python-dateutil',
     ],
 )
