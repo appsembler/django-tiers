@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.2] - 2020-09-25
+
  - Remove setup.py package restrictions (fixes appsembler/devstack#50)
 
 ## [0.2.1] - 2020-09-09
@@ -29,7 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - starting changelog
 
-[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.2.1...HEAD
+[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.2.2...HEAD
+[0.2.1]: https://github.com/appsembler/django-tiers/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/appsembler/django-tiers/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/appsembler/django-tiers/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/appsembler/django-tiers/compare/v0.0.20...v0.1.0
