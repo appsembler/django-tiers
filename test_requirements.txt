@@ -8,3 +8,13 @@ django-model-utils==2.3.1
 python-dateutil==2.8.1
 pytest-cov==2.10.0
 flake8==3.8.3
+
+
+# XBlock dependencies to make testing easier
+# mostly to import workbench.settings
+xblock-utils>=2.1.1
+XBlock==1.2.1; python_version < '3'
+XBlock>=1.4.0; python_version >= '3'
+xblock-sdk>=0.2.2
+django-pyfs>=2.2
+lazy>=1.4

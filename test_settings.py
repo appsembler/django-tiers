@@ -1,3 +1,7 @@
+from workbench.settings import *  # Make testing easier by mocking ROOT_URLCONF
+
+from django.conf.global_settings import LOGGING  # Fix a workbench undesired behaviour
+
 DEBUG = True
 TEST_MODE = True
 TEST_ROOT = "tests"
@@ -15,13 +19,14 @@ DATABASES = {
 
 INSTALLED_APPS = (
     'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-
+    'workbench',
     'fake_organizations',
-    'tiers'
+    'tiers',
 
 )
 
@@ -33,5 +38,4 @@ MIDDLEWARE = [
 ]
 
 TIERS_ORGANIZATION_MODEL = 'fake_organizations.Organization'
-TIERS_EXPIRED_REDIRECT_URL = "/"
-
+TIERS_EXPIRED_REDIRECT_URL = "/site-deactivated"
