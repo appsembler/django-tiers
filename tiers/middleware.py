@@ -6,6 +6,7 @@ from django.urls import NoReverseMatch, reverse
 
 from .models import Tier
 from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
+from .waffle_utils import should_redirect_non_authenticated
 
 try:
     import beeline
@@ -38,12 +39,13 @@ class TierMiddleware(MiddlewareMixin):
         except NoReverseMatch:
             pass
 
-        # Nothing to do if the user is not logged in
         if not request.user.is_authenticated:
-            return
+            # Depending on the feature flag, we may redirect the non-logged in users
+            if not should_redirect_non_authenticated():
+                return
 
         # If the user has superuser privileges don't do anything
-        if request.user.is_superuser:
+        if request.user.is_authenticated and request.user.is_superuser:
             return
 
         # If there is no organization in the sesssion fail silenty.

@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import re
+from waffle.testutils import override_switch
 
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
@@ -10,9 +11,13 @@ from mock import patch, Mock, PropertyMock
 from tiers.tests.utils import TiersTestCaseBase
 from tiers.tests.factories import TierFactory
 from tiers.middleware import TierMiddleware
+from tiers.waffle_utils import REDIRECT_NON_AUTHENTICATED
 
 
 class TiersTests(TiersTestCaseBase):
+    """
+    Tests for the Tier model.
+    """
 
     def test_non_expired_tier(self):
         t = TierFactory()
@@ -63,6 +68,10 @@ class TiersTests(TiersTestCaseBase):
 @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
 @patch('tiers.middleware.reverse', Mock(return_value='/something'))
 class TestMiddlewareTests(TiersTestCaseBase):
+    """
+    TiersMiddleware tests with a non-expired trial Tier.
+    """
+
     def setUp(self):
         super(TestMiddlewareTests, self).setUp()
         self.middleware = TierMiddleware()
@@ -85,9 +94,12 @@ class TestMiddlewareTests(TiersTestCaseBase):
         assert self.request.session['TIER_NAME'] == 'trial'
 
 
-@patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
 @patch('tiers.middleware.reverse', Mock(return_value='/something'))
 class TestExpiredTierMiddleware(TiersTestCaseBase):
+    """
+    TiersMiddleware tests with an expired trial Tier.
+    """
+
     def setUp(self):
         super(TestExpiredTierMiddleware, self).setUp()
         self.middleware = TierMiddleware()
@@ -97,7 +109,20 @@ class TestExpiredTierMiddleware(TiersTestCaseBase):
         self.user = User()
         self.request.user = self.user
 
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
     def test_added_session_attribs(self):
         self.middleware.process_request(self.request)
         assert self.request.session['TIER_EXPIRED']
         assert self.request.session['TIER_NAME'] == 'trial'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=False))
+    def test_default_session_attribs_for_non_authenticated(self):
+        self.middleware.process_request(self.request)
+        assert 'TIER_NAME' not in self.request.session
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=False))
+    @override_switch(REDIRECT_NON_AUTHENTICATED, active=True)
+    def test_redirect_non_authenticated(self):
+        self.middleware.process_request(self.request)
+        assert 'TIER_NAME' in self.request.session
+        assert self.request.session['TIER_EXPIRED']
