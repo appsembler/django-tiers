@@ -5,7 +5,7 @@ import re
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.test.client import RequestFactory
-from mock import patch, Mock
+from mock import patch, Mock, PropertyMock
 
 from tiers.tests.utils import TiersTestCaseBase
 from tiers.tests.factories import TierFactory
@@ -60,7 +60,7 @@ class TiersTests(TiersTestCaseBase):
         assert re.match('0.*minutes', message), 'Should handle future time well.'
 
 
-@patch.object(User, 'is_authenticated', Mock(return_value=True))
+@patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
 @patch('tiers.middleware.reverse', Mock(return_value='/something'))
 class TestMiddlewareTests(TiersTestCaseBase):
     def setUp(self):
@@ -68,8 +68,7 @@ class TestMiddlewareTests(TiersTestCaseBase):
         self.middleware = TierMiddleware()
         self.tier = TierFactory.create(tier_expires_at=datetime.now()+timedelta(days=40))
         self.request = RequestFactory().get('/dashboard')
-        self.request.session = {}
-        self.request.session['organization'] = self.tier.organization
+        self.request.session = {'organization': self.tier.organization}
         self.user = User()
         self.request.user = self.user
 
@@ -83,4 +82,22 @@ class TestMiddlewareTests(TiersTestCaseBase):
         assert not self.request.session['TIER_EXPIRED']
         assert self.request.session['TIER_EXPIRES_IN'] == self.tier.time_til_tier_expires()
         assert self.request.session['DISPLAY_EXPIRATION_WARNING']
+        assert self.request.session['TIER_NAME'] == 'trial'
+
+
+@patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+@patch('tiers.middleware.reverse', Mock(return_value='/something'))
+class TestExpiredTierMiddleware(TiersTestCaseBase):
+    def setUp(self):
+        super(TestExpiredTierMiddleware, self).setUp()
+        self.middleware = TierMiddleware()
+        self.tier = TierFactory.create(tier_expires_at=datetime.now() - timedelta(days=40))
+        self.request = RequestFactory().get('/dashboard')
+        self.request.session = {'organization': self.tier.organization}
+        self.user = User()
+        self.request.user = self.user
+
+    def test_added_session_attribs(self):
+        self.middleware.process_request(self.request)
+        assert self.request.session['TIER_EXPIRED']
         assert self.request.session['TIER_NAME'] == 'trial'
