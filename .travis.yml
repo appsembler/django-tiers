@@ -18,7 +18,7 @@ install:
   - pip install $DJANGO
 script:
   - flake8 tiers
-  - py.test --junitxml=results.xml --cov=./
+  - py.test
   - bash <(curl -s https://codecov.io/bash)
 
 deploy:
