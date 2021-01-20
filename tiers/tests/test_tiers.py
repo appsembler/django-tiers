@@ -132,10 +132,17 @@ class TestExpiredTierMiddleware(TestCase):
 
     @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
     @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
-    def test_expired_url_should_not_redirect(self):
+    def test_admin_url_should_not_redirect(self):
         self.request.path = '/admin'
         response = self.middleware.process_request(self.request)
         assert not response, 'should NOT redirect if if on /admin'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
+    def test_homepage_url_should_redirect(self):
+        self.request.path = '/'
+        response = self.middleware.process_request(self.request)
+        assert response, 'should redirect if if on homepage "/"'
 
     @patch.object(User, 'is_authenticated', PropertyMock(return_value=False))
     def test_default_session_attribs_for_non_authenticated(self):
