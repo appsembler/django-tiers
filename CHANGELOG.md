@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
- - Added tests for expired tiers
+## [0.2.3] - 2021-01-20
+
+ - Support expired URL redirect for non-authenticated users (needs the [Waffle Switch](https://waffle.readthedocs.io/en/stable/types/switch.html) `tiers.redirect_non_authenticated` to be switched on).
+ - Improved whitelisted urls
+ - Added and refactored tests for expired tiers
 
 ## [0.2.2] - 2020-09-25
 
