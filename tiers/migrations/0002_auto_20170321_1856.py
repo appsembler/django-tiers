@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-from ..app_settings import ORGANIZATION_MODEL
+from ..app_settings import settings
 
 
 class Migration(migrations.Migration):
@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='tier',
             name='organization',
-            field=models.OneToOneField(related_name='tier', null=True, blank=True, to=ORGANIZATION_MODEL, on_delete=models.deletion.DO_NOTHING),
+            field=models.OneToOneField(related_name='tier', null=True, blank=True, to=settings.organization_model(), on_delete=models.deletion.DO_NOTHING),
         ),
     ]

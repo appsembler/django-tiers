@@ -7,13 +7,13 @@ import django.utils.timezone
 import model_utils.fields
 import tiers.models
 
-from ..app_settings import ORGANIZATION_MODEL
+from ..app_settings import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(ORGANIZATION_MODEL),
+        migrations.swappable_dependency(settings.organization_model()),
     ]
 
     operations = [
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('tier_enforcement_exempt', models.BooleanField(default=False)),
                 ('tier_enforcement_grace_period', models.PositiveIntegerField(default=14)),
                 ('tier_expires_at', models.DateTimeField(default=tiers.models.set_default_expiration)),
-                ('organization', models.OneToOneField(related_name='tier', to=ORGANIZATION_MODEL, on_delete=models.deletion.DO_NOTHING)),
+                ('organization', models.OneToOneField(related_name='tier', to=settings.organization_model(), on_delete=models.deletion.DO_NOTHING)),
             ],
             options={
                 'abstract': False,
