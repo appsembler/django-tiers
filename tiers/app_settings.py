@@ -15,5 +15,10 @@ class Settings:
     def organization_tier_getter_name(self):
         return getattr(django_settings, 'TIERS_ORGANIZATION_TIER_GETTER_NAME', None)
 
+    def redirect_white_list(self):
+        return getattr(django_settings, 'TIERS_REDIRECT_WHITELIST', [
+            '/admin'
+        ])
+
 
 settings = Settings()

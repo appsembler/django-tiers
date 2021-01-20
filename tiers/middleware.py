@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
 from django.urls import NoReverseMatch, reverse
 
+from .helpers import is_equal_or_sub_url, should_redirect_url
 from .models import Tier
 from .app_settings import settings
 from .waffle_utils import should_redirect_non_authenticated

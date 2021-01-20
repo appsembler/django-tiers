@@ -112,9 +112,14 @@ class TestExpiredTierMiddleware(TestCase):
     @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
     @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
     def test_added_session_attribs(self):
-        response = self.middleware.process_request(self.request)
+        self.middleware.process_request(self.request)
         assert self.request.session['TIER_EXPIRED']
         assert self.request.session['TIER_NAME'] == 'trial'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
+    def test_redirect(self):
+        response = self.middleware.process_request(self.request)
         assert response, 'should redirect'
         assert response.status_code == 302 and response['Location'] == '/expired', 'should redirect'
 
