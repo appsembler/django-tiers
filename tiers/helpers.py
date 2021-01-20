@@ -11,11 +11,11 @@ def is_equal_or_sub_url(request_url, checked_url):
     return request_url.startswith(checked_url)
 
 
-def should_redirect_url(url):
+def is_white_listed_url(url):
     """Checks if the URL is whitelisted for non-redirect."""
     if url == '/':
-        # On homepage. Should be redirected.
-        return True
+        # Homepage is not whitelisted.
+        return False
 
     white_listed_urls = settings.redirect_white_list()
     if settings.expired_redirect_url():

@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
 from django.urls import NoReverseMatch, reverse
 
-from .helpers import is_equal_or_sub_url, should_redirect_url
+from .helpers import is_equal_or_sub_url, is_white_listed_url
 from .models import Tier
 from .app_settings import settings
 from .waffle_utils import should_redirect_non_authenticated
@@ -29,7 +29,7 @@ class TierMiddleware(MiddlewareMixin):
         """
         # If we're aleady on the url where we have to be, do nothing
         expired_redirect_url = settings.expired_redirect_url()
-        if (expired_redirect_url is not None) and (request.path.rstrip('/') in expired_redirect_url.rstrip('/')):
+        if is_equal_or_sub_url(request_url=request.path, checked_url=expired_redirect_url):
             beeline.add_context_field("tiers.no_action_required", True)
             return
 
@@ -86,7 +86,5 @@ class TierMiddleware(MiddlewareMixin):
 
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
         if tier.has_tier_expired():
-            if expired_redirect_url is None:
-                return
-            else:
+            if expired_redirect_url and not is_white_listed_url(request.path):
                 return redirect(expired_redirect_url)
