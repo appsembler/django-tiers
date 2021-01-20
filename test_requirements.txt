@@ -8,7 +8,7 @@ mock==3.0.5
 django-model-utils==2.3.1
 python-dateutil==2.8.1
 flake8==3.8.3
-
+django-waffle==0.18.0
 
 # XBlock dependencies to make testing easier
 # mostly to import workbench.settings

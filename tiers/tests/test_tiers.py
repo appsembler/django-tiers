@@ -1,18 +1,23 @@
 from __future__ import unicode_literals
 
 import re
+from waffle.testutils import override_switch
 
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from django.test import TestCase, override_settings
 from django.test.client import RequestFactory
 from mock import patch, Mock, PropertyMock
 
-from tiers.tests.utils import TiersTestCaseBase
 from tiers.tests.factories import TierFactory
 from tiers.middleware import TierMiddleware
+from tiers.waffle_utils import REDIRECT_NON_AUTHENTICATED
 
 
-class TiersTests(TiersTestCaseBase):
+class TiersTests(TestCase):
+    """
+    Tests for the Tier model.
+    """
 
     def test_non_expired_tier(self):
         t = TierFactory()
@@ -62,7 +67,11 @@ class TiersTests(TiersTestCaseBase):
 
 @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
 @patch('tiers.middleware.reverse', Mock(return_value='/something'))
-class TestMiddlewareTests(TiersTestCaseBase):
+class TestMiddlewareTests(TestCase):
+    """
+    TiersMiddleware tests with a non-expired trial Tier.
+    """
+
     def setUp(self):
         super(TestMiddlewareTests, self).setUp()
         self.middleware = TierMiddleware()
@@ -85,9 +94,12 @@ class TestMiddlewareTests(TiersTestCaseBase):
         assert self.request.session['TIER_NAME'] == 'trial'
 
 
-@patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
 @patch('tiers.middleware.reverse', Mock(return_value='/something'))
-class TestExpiredTierMiddleware(TiersTestCaseBase):
+class TestExpiredTierMiddleware(TestCase):
+    """
+    TiersMiddleware tests with an expired trial Tier.
+    """
+
     def setUp(self):
         super(TestExpiredTierMiddleware, self).setUp()
         self.middleware = TierMiddleware()
@@ -97,7 +109,49 @@ class TestExpiredTierMiddleware(TiersTestCaseBase):
         self.user = User()
         self.request.user = self.user
 
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
     def test_added_session_attribs(self):
         self.middleware.process_request(self.request)
         assert self.request.session['TIER_EXPIRED']
         assert self.request.session['TIER_NAME'] == 'trial'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
+    def test_redirect(self):
+        response = self.middleware.process_request(self.request)
+        assert response, 'should redirect'
+        assert response.status_code == 302 and response['Location'] == '/expired', 'should redirect'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
+    def test_expired_url_should_not_redirect(self):
+        self.request.path = '/expired'
+        response = self.middleware.process_request(self.request)
+        assert not response, 'should NOT redirect if it is already on expred url'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
+    def test_admin_url_should_not_redirect(self):
+        self.request.path = '/admin'
+        response = self.middleware.process_request(self.request)
+        assert not response, 'should NOT redirect if if on /admin'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
+    def test_homepage_url_should_redirect(self):
+        self.request.path = '/'
+        response = self.middleware.process_request(self.request)
+        assert response, 'should redirect if if on homepage "/"'
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=False))
+    def test_default_session_attribs_for_non_authenticated(self):
+        self.middleware.process_request(self.request)
+        assert 'TIER_NAME' not in self.request.session
+
+    @patch.object(User, 'is_authenticated', PropertyMock(return_value=False))
+    @override_switch(REDIRECT_NON_AUTHENTICATED, active=True)
+    def test_redirect_non_authenticated(self):
+        self.middleware.process_request(self.request)
+        assert 'TIER_NAME' in self.request.session
+        assert self.request.session['TIER_EXPIRED']

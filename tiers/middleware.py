@@ -4,8 +4,10 @@ from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
 from django.urls import NoReverseMatch, reverse
 
+from .helpers import is_equal_or_sub_url, is_white_listed_url
 from .models import Tier
-from .app_settings import EXPIRED_REDIRECT_URL, ORGANIZATION_TIER_GETTER_NAME
+from .app_settings import settings
+from .waffle_utils import should_redirect_non_authenticated
 
 try:
     import beeline
@@ -26,7 +28,8 @@ class TierMiddleware(MiddlewareMixin):
         is expired
         """
         # If we're aleady on the url where we have to be, do nothing
-        if (EXPIRED_REDIRECT_URL is not None) and (request.path.rstrip('/') in EXPIRED_REDIRECT_URL.rstrip('/')):
+        expired_redirect_url = settings.expired_redirect_url()
+        if is_equal_or_sub_url(request_url=request.path, checked_url=expired_redirect_url):
             beeline.add_context_field("tiers.no_action_required", True)
             return
 
@@ -38,12 +41,13 @@ class TierMiddleware(MiddlewareMixin):
         except NoReverseMatch:
             pass
 
-        # Nothing to do if the user is not logged in
         if not request.user.is_authenticated:
-            return
+            # Depending on the feature flag, we may redirect the non-logged in users
+            if not should_redirect_non_authenticated():
+                return
 
         # If the user has superuser privileges don't do anything
-        if request.user.is_superuser:
+        if request.user.is_authenticated and request.user.is_superuser:
             return
 
         # If there is no organization in the sesssion fail silenty.
@@ -55,8 +59,9 @@ class TierMiddleware(MiddlewareMixin):
         org = request.session['organization']
         beeline.add_context_field("tiers.organization", "{}".format(org))
         try:
-            if ORGANIZATION_TIER_GETTER_NAME:
-                tier = org.__getattribute__(ORGANIZATION_TIER_GETTER_NAME)()
+            organization_tier_getter_name = settings.organization_tier_getter_name()
+            if organization_tier_getter_name:
+                tier = org.__getattribute__(organization_tier_getter_name)()
             else:
                 tier = org.tier
         except Exception:
@@ -81,7 +86,5 @@ class TierMiddleware(MiddlewareMixin):
 
         # TODO: I'm not sure if we have to refresh the session info at this point somehow.
         if tier.has_tier_expired():
-            if EXPIRED_REDIRECT_URL is None:
-                return
-            else:
-                return redirect(EXPIRED_REDIRECT_URL)
+            if expired_redirect_url and not is_white_listed_url(request.path):
+                return redirect(expired_redirect_url)

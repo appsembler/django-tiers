@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.utils.timesince import timeuntil
 from django.db import models
 
-from .app_settings import ORGANIZATION_MODEL
+from .app_settings import settings
 
 from model_utils.models import TimeStampedModel
 from model_utils import Choices
@@ -37,7 +37,7 @@ class Tier(TimeStampedModel):
         choices=TIERS,
         default=TIERS.TRIAL)
     organization = models.OneToOneField(
-        ORGANIZATION_MODEL,
+        settings.organization_model(),
         related_name='tier',
         null=True,
         blank=True,
