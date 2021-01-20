@@ -5,16 +5,16 @@ from waffle.testutils import override_switch
 
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.test.client import RequestFactory
 from mock import patch, Mock, PropertyMock
 
-from tiers.tests.utils import TiersTestCaseBase
 from tiers.tests.factories import TierFactory
 from tiers.middleware import TierMiddleware
 from tiers.waffle_utils import REDIRECT_NON_AUTHENTICATED
 
 
-class TiersTests(TiersTestCaseBase):
+class TiersTests(TestCase):
     """
     Tests for the Tier model.
     """
@@ -67,7 +67,7 @@ class TiersTests(TiersTestCaseBase):
 
 @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
 @patch('tiers.middleware.reverse', Mock(return_value='/something'))
-class TestMiddlewareTests(TiersTestCaseBase):
+class TestMiddlewareTests(TestCase):
     """
     TiersMiddleware tests with a non-expired trial Tier.
     """
@@ -95,7 +95,7 @@ class TestMiddlewareTests(TiersTestCaseBase):
 
 
 @patch('tiers.middleware.reverse', Mock(return_value='/something'))
-class TestExpiredTierMiddleware(TiersTestCaseBase):
+class TestExpiredTierMiddleware(TestCase):
     """
     TiersMiddleware tests with an expired trial Tier.
     """
@@ -114,6 +114,7 @@ class TestExpiredTierMiddleware(TiersTestCaseBase):
         self.middleware.process_request(self.request)
         assert self.request.session['TIER_EXPIRED']
         assert self.request.session['TIER_NAME'] == 'trial'
+
 
     @patch.object(User, 'is_authenticated', PropertyMock(return_value=False))
     def test_default_session_attribs_for_non_authenticated(self):
