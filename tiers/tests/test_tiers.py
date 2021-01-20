@@ -5,7 +5,7 @@ from waffle.testutils import override_switch
 
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.test.client import RequestFactory
 from mock import patch, Mock, PropertyMock
 
@@ -110,11 +110,13 @@ class TestExpiredTierMiddleware(TestCase):
         self.request.user = self.user
 
     @patch.object(User, 'is_authenticated', PropertyMock(return_value=True))
+    @override_settings(TIERS_EXPIRED_REDIRECT_URL='/expired')
     def test_added_session_attribs(self):
-        self.middleware.process_request(self.request)
+        response = self.middleware.process_request(self.request)
         assert self.request.session['TIER_EXPIRED']
         assert self.request.session['TIER_NAME'] == 'trial'
-
+        assert response, 'should redirect'
+        assert response.status_code == 302 and response['Location'] == '/expired', 'should redirect'
 
     @patch.object(User, 'is_authenticated', PropertyMock(return_value=False))
     def test_default_session_attribs_for_non_authenticated(self):
