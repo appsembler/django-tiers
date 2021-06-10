@@ -13,8 +13,9 @@ django-waffle==0.18.0
 # XBlock dependencies to make testing easier
 # mostly to import workbench.settings
 xblock-utils>=2.1.1
-XBlock==1.2.1; python_version < '3'
-XBlock>=1.4.0; python_version >= '3'
-xblock-sdk>=0.2.2
+XBlock==1.4.0; python_version < '3.9'
+XBlock>=1.4.0; python_version >= '3.9'
+xblock-sdk==0.2.2; python_version < '3.9'
+xblock-sdk>=0.3.0; python_version >= '3.9'
 django-pyfs>=2.2
 lazy>=1.4
