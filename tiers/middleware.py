@@ -69,7 +69,7 @@ class TierMiddleware(MiddlewareMixin):
             # fail silently. This should not happen. We should always automatically create
             # a tier for each organization.
             beeline.add_context_field("tiers.organization_without_tier", True)
-            log.warning("Organization wihout Tier: {0}".format(org))
+            log.exception("Organization has a problem with its Tier: {0}".format(org))
             return
 
         # Only display expiration warning for Trial tiers for now
