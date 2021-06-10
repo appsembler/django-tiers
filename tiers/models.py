@@ -47,8 +47,11 @@ class Tier(TimeStampedModel):
     tier_expires_at = models.DateTimeField(
         default=set_default_expiration)
 
-    def __unicode__(self):
-        return u"{0} - {1}".format(self.organization.name, self.name)
+    def __str__(self):
+        return 'Tier <org: {0} at tier: {1}>'.format(self.organization.name, self.name)
+
+    class Meta:
+        app_label = 'tiers'
 
     @check_if_exempt
     def has_tier_expired(self):
