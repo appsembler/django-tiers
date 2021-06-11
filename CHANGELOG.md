@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4] - 2021-06-10
+
+ - Add more details when a tier error happens in the middleware
+ - Django 2: Add `app_label` to the Django models
+ - Python 3: Convert `__unicode__` to `__str__`
+
 ## [0.2.3] - 2021-01-20
 
  - Support expired URL redirect for non-authenticated users (needs the [Waffle Switch](https://waffle.readthedocs.io/en/stable/types/switch.html) `tiers.redirect_non_authenticated` to be switched on).
@@ -38,7 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - starting changelog
 
-[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.2.3...HEAD
+[unreleased]: https://github.com/appsembler/django-tiers/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/appsembler/django-tiers/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/appsembler/django-tiers/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/appsembler/django-tiers/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/appsembler/django-tiers/compare/v0.2.0...v0.2.1
