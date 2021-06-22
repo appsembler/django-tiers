@@ -13,7 +13,8 @@ jobs:
         python-version: [3.5, 3.8]
         tox-env:
           - flake8
-          - py3
+          - py3-django2
+          - py3-django3
     steps:
      - uses: actions/checkout@v2
      - name: Set up Python ${{ matrix.python-version }}
