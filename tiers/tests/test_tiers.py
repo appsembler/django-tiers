@@ -23,19 +23,16 @@ class TiersTests(TestCase):
         t = TierFactory()
         assert t.tier_enforcement_exempt is False
         assert t.has_tier_expired() is False
-        assert t.has_tier_grace_period_expired() is False
 
     def test_expired_tier(self):
         t = TierFactory(tier_expires_at=(datetime.now() - timedelta(days=2)))
         assert t.tier_enforcement_exempt is False
         assert t.has_tier_expired() is True
-        assert t.has_tier_grace_period_expired() is False
 
     def test_expired_grade_period(self):
         t = TierFactory(tier_expires_at=(datetime.now() - timedelta(days=20)))
         assert t.tier_enforcement_exempt is False
         assert t.has_tier_expired() is True
-        assert t.has_tier_grace_period_expired() is True
 
     def test_exemption(self):
         t = TierFactory(
@@ -43,11 +40,10 @@ class TiersTests(TestCase):
             tier_expires_at=(datetime.now() - timedelta(days=20)))
         assert t.tier_enforcement_exempt is True
         assert t.has_tier_expired() is False
-        assert t.has_tier_grace_period_expired() is False
 
     def test_expire_message(self):
         """
-        Ensures that `has_tier_grace_period_expired` works well.
+        Ensures that `time_til_tier_expires` works well.
 
         This function uses regexps match what the Django `timeuntil` returns.
         The `avoid_wrapping` function has more details in the docstring.

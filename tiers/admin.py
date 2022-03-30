@@ -45,8 +45,7 @@ class ActiveTierFilter(SimpleListFilter):
 
 
 class TierAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'get_microsites', 'name', 'tier_expires_at',
-                    'tier_enforcement_grace_period', 'tier_enforcement_exempt',)
+    list_display = ('organization', 'get_microsites', 'name', 'tier_expires_at', 'tier_enforcement_exempt',)
     search_fields = ['organization__name', 'name']
     list_filter = ['name', ActiveTierFilter, 'tier_expires_at', 'tier_enforcement_exempt']
     actions = [make_exempt]
