@@ -12,9 +12,13 @@ jobs:
       matrix:
         python-version: [3.5, 3.8]
         tox-env:
-          - flake8
           - py3
-          - bandit
+        include:
+          - tox-env: flake8
+            python-version: 3.5
+          - tox-env: bandit
+            python-version: 3.8
+
     steps:
      - uses: actions/checkout@v2
      - name: Set up Python ${{ matrix.python-version }}
