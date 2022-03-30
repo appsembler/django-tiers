@@ -24,6 +24,10 @@ class TiersTests(TestCase):
         assert t.tier_enforcement_exempt is False
         assert t.has_tier_expired() is False
 
+    def test_tier_str(self):
+        t = TierFactory()
+        assert 'Tier <org:' in str(t)
+
     def test_expired_tier(self):
         t = TierFactory(tier_expires_at=(datetime.now() - timedelta(days=2)))
         assert t.tier_enforcement_exempt is False
