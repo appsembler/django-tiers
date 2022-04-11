@@ -1,36 +1,28 @@
 from datetime import timedelta
-from functools import wraps
 
 from django.utils import timezone
-from django.utils.timesince import timeuntil
 from django.db import models
-
-from .app_settings import settings
 
 from model_utils.models import TimeStampedModel
 from model_utils import Choices
 
 
-def set_default_expiration():
-    return timezone.now() + timedelta(days=30)
+from .app_settings import settings
+from .tier_info import TierInfo
 
 
-def check_if_exempt(f):
-    @wraps(f)
-    def wrapper(self, **kwargs):
-        if self.tier_enforcement_exempt:
-            return False
-        return f(self, **kwargs)
-    return wrapper
+def set_default_expiration(now=None):
+    if not now:
+        now = timezone.now()
+
+    return now + timedelta(days=30)
 
 
 class Tier(TimeStampedModel):
-    TIERS = Choices(
-        ('trial', 'TRIAL', 'Trial'),  # Expires in 30 days
-        ('basic', 'BASIC', 'Basic'),
-        ('pro', 'PRO', 'Professional'),
-        ('premium', 'PREMIUM', 'Premium'),
-    )
+    TIERS = Choices(*[
+        (tier.id, tier.id.upper(), tier.name)
+        for tier in TierInfo.TIERS
+    ])
 
     name = models.CharField(
         max_length=255,
@@ -56,12 +48,17 @@ class Tier(TimeStampedModel):
     class Meta:
         app_label = 'tiers'
 
-    @check_if_exempt
-    def has_tier_expired(self):
-        """Helper function that checks whether a tier has expired"""
-        return timezone.now() > self.tier_expires_at
+    def get_tier_info(self):
+        return TierInfo(
+            tier=self.name,
+            subscription_ends=self.tier_expires_at,
+            always_active=self.tier_enforcement_exempt,
+        )
 
-    @check_if_exempt
+    def has_tier_expired(self, now=None):
+        """Helper function that checks whether a tier has expired"""
+        return self.get_tier_info().has_subscription_ended(now=now)
+
     def time_til_tier_expires(self, now=None):
         """Pretty prints time left til expiration"""
-        return timeuntil(self.tier_expires_at, now)
+        return self.get_tier_info().time_til_expiration(now=now)
