@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.8] - 2022-09-25
+ - Verified Django 3 compatability
+
+## [0.2.7] - 2022-06-15
+ - General fixes
+
 ## [0.2.6] - 2021-07-02
  - Add Django admin filters for active/inactive tiers (does not respect tier graceperiod)
 
